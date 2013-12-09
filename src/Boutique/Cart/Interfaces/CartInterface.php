@@ -4,7 +4,7 @@ interface CartInterface {
 
     public function add(array $data);
 
-    public function update($key, array $data);
+    public function update($key, $name, $value);
 
     public function get($key);
 

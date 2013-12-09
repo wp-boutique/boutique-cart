@@ -25,7 +25,7 @@ class Cart implements CartInterface {
 
     public function add(array $data)
     {
-        $item = new $this->cartItem($data);
+        $item = $this->cartItem->make($data);
 
         $this->items[] = $item;
 
@@ -34,14 +34,14 @@ class Cart implements CartInterface {
         return $item;
     }
 
-    public function update($key, $key, $value)
+    public function update($key, $name, $value)
     {
-        $item = $this->find($id);
+        $item = $this->find($key);
 
         if( !$item )
-            throw new InvalidArgumentException("Unable to find a cart item with the id of {$id}.");
+            throw new InvalidArgumentException("Unable to find a cart item with the id of {$key}.");
 
-        $item->$key = $value;
+        $item->$name = $value;
 
         $this->save();
 
@@ -58,7 +58,7 @@ class Cart implements CartInterface {
         $items =& $this->items;
 
        foreach ($items as $position => $item) {
-            if ($itemId === $item->id) {
+            if ($key === $item->key) {
                 unset($items[$position]);
             }
         }
@@ -91,14 +91,25 @@ class Cart implements CartInterface {
         $this->storage->flush(static::$id);
     }
 
+    protected function find($key)
+    {
+        foreach ($this->items as $item) {
+            if ($key === $item->key) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
     protected function save()
     {
-        $this->storage->set(static::$cart, $this->items);
+        $this->storage->set(static::$id, $this->items);
     }
 
     protected function restore()
     {
-        $items = $this->storage->get(static::$cart);
+        $items = $this->storage->get(static::$id);
 
         foreach( $items as $item )
         {
