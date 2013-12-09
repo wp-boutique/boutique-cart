@@ -7,14 +7,36 @@ use InvalidArgumentException;
 
 class Cart implements CartInterface {
 
+    /**
+     * Cart identifier for the
+     * Storage implementation
+     * @var string
+     */
     protected static $id = 'cart';
 
+    /**
+     * Storage implemantation
+     * @var StorageInterface
+     */
     protected $storage;
 
+    /**
+     * Cart Item implementation
+     * @var CartItemInterface
+     */
     protected $cartItem;
 
-    protected $items;
+    /**
+     * Cart items
+     * @var array
+     */
+    protected $items = [];
 
+    /**
+     * Cart constructor
+     * @param StorageInterface  $storage
+     * @param CartItemInterface $item
+     */
     public function __construct(StorageInterface $storage, CartItemInterface $item)
     {
         $this->storage  = $storage;
@@ -23,6 +45,10 @@ class Cart implements CartInterface {
         $this->restore();
     }
 
+    /**
+     * Add item to cart
+     * @param array $data
+     */
     public function add(array $data)
     {
         $item = $this->cartItem->make($data);
@@ -34,6 +60,13 @@ class Cart implements CartInterface {
         return $item;
     }
 
+    /**
+     * Update cart item attribute
+     * @param  string $key
+     * @param  string $name
+     * @param  string $value
+     * @return mixed
+     */
     public function update($key, $name, $value)
     {
         $item = $this->find($key);
@@ -48,11 +81,30 @@ class Cart implements CartInterface {
         return $item->key;
     }
 
+    /**
+     * Get cart item by key
+     * @param  string $key
+     * @return CartItemInterface
+     */
     public function get($key)
     {
         return $this->find($key);
     }
 
+    /**
+     * Get all cart items
+     * @return array
+     */
+    public function all()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Trash a cart item by key
+     * @param  string $key
+     * @return void
+     */
     public function trash($key)
     {
         $items =& $this->items;
@@ -66,11 +118,19 @@ class Cart implements CartInterface {
         $this->save();
     }
 
+    /**
+     * Get total unique items in cart
+     * @return integer
+     */
     public function totalUniqueItems()
     {
         return count($this->items);
     }
 
+    /**
+     * Total items in cart
+     * @return integer
+     */
     public function totalItems()
     {
         return array_sum(array_map(function($item) {
@@ -78,6 +138,10 @@ class Cart implements CartInterface {
         }, $this->items));
     }
 
+    /**
+     * Cart total value
+     * @return float
+     */
     public function total()
     {
         return (float) array_sum(array_map(function($item) {
@@ -85,12 +149,21 @@ class Cart implements CartInterface {
         }, $this->items));
     }
 
+    /**
+     * Clear cart
+     * @return void
+     */
     public function clear()
     {
         $this->items = array();
         $this->storage->flush(static::$id);
     }
 
+    /**
+     * Find cart item by key
+     * @param  string $key
+     * @return mixed
+     */
     protected function find($key)
     {
         foreach ($this->items as $item) {
@@ -102,11 +175,19 @@ class Cart implements CartInterface {
         return null;
     }
 
+    /**
+     * Save cart to storage implemantation
+     * @return void
+     */
     protected function save()
     {
         $this->storage->set(static::$id, $this->items);
     }
 
+    /**
+     * Restore cart from storage implementation
+     * @return void
+     */
     protected function restore()
     {
         $items = $this->storage->get(static::$id);

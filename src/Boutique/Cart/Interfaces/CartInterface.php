@@ -6,6 +6,8 @@ interface CartInterface {
 
     public function update($key, $name, $value);
 
+    public function all();
+
     public function get($key);
 
     public function trash($key);
