@@ -1,8 +1,9 @@
 <?php namespace Boutique\Cart;
 
 use InvalidArgumentException;
+use Boutique\Cart\Interfaces\CartItemInterface;
 
-class CartItem {
+class CartItem implements CartItemInterface {
 
     /**
      * Keys to ignore when generating key
