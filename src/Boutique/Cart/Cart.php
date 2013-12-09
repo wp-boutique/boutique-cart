@@ -19,6 +19,8 @@ class Cart implements CartInterface {
     {
         $this->storage  = $storage;
         $this->cartItem = $item;
+
+        $this->restore();
     }
 
     public function add(array $data)
@@ -92,5 +94,15 @@ class Cart implements CartInterface {
     protected function save()
     {
         $this->storage->set(static::$cart, $this->items);
+    }
+
+    protected function restore()
+    {
+        $items = $this->storage->get(static::$cart);
+
+        foreach( $items as $item )
+        {
+            $this->add($item);
+        }
     }
 }
