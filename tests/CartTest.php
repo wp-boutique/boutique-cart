@@ -85,6 +85,16 @@ class CartTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(is_float($this->cart->total()));
     }
 
+    public function testGetAllItems()
+    {
+        $this->addItemToCart();
+
+        $all = $this->cart->all();
+
+        $this->assertTrue( is_array($all) );
+        $this->assertEquals(count($all), 1);
+    }
+
     protected function addItemToCart()
     {
         return $this->cart->add(array('foo'));
