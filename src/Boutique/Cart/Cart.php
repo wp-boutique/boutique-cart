@@ -156,7 +156,7 @@ class Cart implements CartInterface {
     public function clear()
     {
         $this->items = array();
-        $this->storage->flush(static::$id);
+        $this->storage->trash(static::$id);
     }
 
     /**
@@ -190,7 +190,7 @@ class Cart implements CartInterface {
      */
     protected function restore()
     {
-        $items = $this->storage->get(static::$id);
+        $items = $this->storage->get(static::$id, array());
 
         foreach( $items as $item )
         {
