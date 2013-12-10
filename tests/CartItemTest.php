@@ -21,6 +21,7 @@ class CartItemTest extends PHPUnit_Framework_TestCase {
         $new = $item->make($this->data);
 
         $this->assertEquals($item->key, null);
+
         $this->assertTrue( !!$new->key );
     }
 
@@ -49,6 +50,7 @@ class CartItemTest extends PHPUnit_Framework_TestCase {
 
         // Rename product
         $item->name = 'Bar';
+
         $this->assertTrue( !!$key );
         // Test that key has changed
         $this->assertNotSame($item->key, $key);

@@ -9,7 +9,7 @@ class CartItem implements CartItemInterface {
      * Keys to ignore when generating key
      * @var array
      */
-    protected static $ignoreKeys = ['quantity'];
+    protected static $ignoreKeys = ['quantity', 'key'];
 
     /**
      * Item attributes
@@ -72,7 +72,7 @@ class CartItem implements CartItemInterface {
 
         $hash = sha1(serialize($hashData));
 
-        $this->key = $hash;
+        $this->attributes['key'] = $hash;
 
         return $hash;
     }
