@@ -20,6 +20,5 @@
         "psr-0": {
             "Boutique\\Cart": "src/"
         }
-    },
-    "target-dir": "Boutique/Cart"
+    }
 }
