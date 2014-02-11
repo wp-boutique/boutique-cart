@@ -53,11 +53,28 @@ class Cart implements CartInterface {
     {
         $item = $this->cartItem->make($data);
 
+        if( $existing = $this->find($item->key) )
+        {
+            return $this->addQuantity($existing, $data['quantity']);
+        }
+
         $this->items[] = $item;
 
         $this->save();
 
         return $item;
+    }
+
+    /**
+     * Add to quantity on an existing item
+     * @param CartItemInterface $item
+     * @param integer           $quantity
+     */
+    protected function addQuantity(CartItemInterface $item, $quantity)
+    {
+        $this->update($item->key, 'quantity', $item->quantity + $quantity);
+
+        return $this->find($item->key);
     }
 
     /**

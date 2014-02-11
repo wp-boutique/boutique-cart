@@ -59,22 +59,31 @@ class CartItem implements CartItemInterface {
     }
 
     /**
+     * Generate key
+     * @param  array  $data
+     * @return string
+     */
+    public function key(array $data)
+    {
+        foreach (static::$ignoreKeys as $key)
+        {
+            unset($data[$key]);
+        }
+
+        $hash = sha1(serialize($data));
+
+        return $hash;
+    }
+
+    /**
      * Set item key
      */
     protected function setKey()
     {
-        $hashData = $this->attributes;
+        $key = $this->key($this->attributes);
+        $this->attributes['key'] = $key;
 
-        foreach (static::$ignoreKeys as $key)
-        {
-            unset($hashData[$key]);
-        }
-
-        $hash = sha1(serialize($hashData));
-
-        $this->attributes['key'] = $hash;
-
-        return $hash;
+        return $key;
     }
 
     /**
